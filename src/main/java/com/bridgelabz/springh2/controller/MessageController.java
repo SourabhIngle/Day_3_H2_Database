@@ -54,7 +54,7 @@ public class MessageController {
             messageRepo.deleteById(id);
             return messageData.get();
         }
-        return null; // or throw an exception if desired
+        return null; 
     }
 
 }
