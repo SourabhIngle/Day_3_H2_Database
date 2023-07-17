@@ -1,8 +1,13 @@
 package com.bridgelabz.springh2.controller;
 
+import com.bridgelabz.springh2.dto.MessageDTO;
+import com.bridgelabz.springh2.dto.ResponseDTO;
 import com.bridgelabz.springh2.model.Message;
 import com.bridgelabz.springh2.repository.MessageRepo;
+import com.bridgelabz.springh2.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +19,13 @@ public class MessageController {
     @Autowired
     private MessageRepo messageRepo;
 
+    @Autowired
+    private MessageService messageService;
+
     @PostMapping("/add")
-    public Message addMessage(@RequestBody Message message) {
-        return messageRepo.save(message);
+    public ResponseEntity<ResponseDTO> addMessage(@RequestBody MessageDTO messageDTO) {
+        ResponseDTO responseDTO = new ResponseDTO("Data Add Successfully", messageService.addMessage(messageDTO));
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/getAll")
@@ -28,20 +37,18 @@ public class MessageController {
     // we can use @RequestParam also = @GetMapping("/getbyid")
     // local-8089/getById?id=1
     @GetMapping("/getbyid/{id}")
-    public Optional<Message> getById(@PathVariable int id) {  // Optional is a class
-        return messageRepo.findById(id);
+    public ResponseEntity<ResponseDTO> getById(@PathVariable int id) {  // Optional is a class
+        ResponseDTO responseDTO = new ResponseDTO("Data Fetched Successfully", messageService.getById(id));
+        return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
 
 
     // for set data => @RequestBody Message message
     @PutMapping("/update/{id}")
-    public Message updateMessage(@PathVariable int id, @RequestBody Message message) {
-        Optional<Message> messageData = messageRepo.findById(id);
-        if (messageData.isPresent()) {
-            messageData.get().setMessage(message.getMessage());     //set the new data
-            return messageRepo.save(messageData.get());             //save new data in database
-        }
-        return null;
+    public ResponseEntity<ResponseDTO> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
+        Message message = messageService.updateMessage(id, messageDTO);
+        ResponseDTO responseDTO = new ResponseDTO("Data Updated Successfully", message);
+        return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
 
 
@@ -54,7 +61,8 @@ public class MessageController {
             messageRepo.deleteById(id);
             return messageData.get();
         }
-        return null; 
+
+        return null;
     }
 
 }
