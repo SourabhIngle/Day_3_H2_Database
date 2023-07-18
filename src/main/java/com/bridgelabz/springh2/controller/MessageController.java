@@ -23,7 +23,7 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping("/add")
-    public ResponseEntity<ResponseDTO> addMessage(@RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<ResponseDTO> addMessage(@Valid @RequestBody MessageDTO messageDTO) {
         ResponseDTO responseDTO = new ResponseDTO("Data Add Successfully", messageService.addMessage(messageDTO));
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
@@ -45,7 +45,7 @@ public class MessageController {
 
     // for set data => @RequestBody Message message
     @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseDTO> updateMessage(@PathVariable int id, @RequestBody MessageDTO messageDTO) {
+    public ResponseEntity<ResponseDTO> updateMessage(@PathVariable int id, @Valid @RequestBody MessageDTO messageDTO) {
         Message message = messageService.updateMessage(id, messageDTO);
         ResponseDTO responseDTO = new ResponseDTO("Data Updated Successfully", message);
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
