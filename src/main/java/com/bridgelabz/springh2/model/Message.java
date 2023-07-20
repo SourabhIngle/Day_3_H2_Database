@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Table(name = "message_data")
 public class Message {
 
-    @Id              // This annotation is showing this my primary key
+    @Id              // This annotation is showing this is my primary key
     @GeneratedValue  // Auto generate ids
     private int Id;
     private String title;
